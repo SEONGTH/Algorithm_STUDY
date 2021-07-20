@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+//#include <iostream>
+
+int arr[1010101];
+int n;
+int *sorted;
+
+void marge(int start, int end){
+    int mid = (start + end) / 2;
+    int i , j, k;
+    i = start;
+    j = mid+1;
+    k = start;
+
+    while(i <= mid && j <= end){
+        //첫번째배열이 배열중간의 끝까지 오거나
+        //두번째배열이 우측끝까지 갈 때 까지 반복
+
+        if(arr[i] <= arr[j]){
+            //첫번째배열값들이 두번째배열보다 작아서 
+            //첫배열값들 다 소모하면 그다음부턴 그냥 i 이후
+            //부터 세는 경우
+            sorted[k++] = arr[i++];
+        }
+        else{
+            //그게 아니면 두번째 배열만큼입니다.
+            sorted[k++] = arr[j++];
+        }
+
+    }
+    if(i > mid){ //만약 배열1이 가운데보다 클 경우엔
+        for(int x = j; x <= mid ; x++){ 
+            sorted[k++] = arr[x];
+        }
+    }
+    else{
+        for(int x = i; x <= mid; x++){
+            sorted[k++] = arr[x];
+        }
+    }
+    for(int q = start; q <= end; q++){
+        arr[q] = sorted[q];
+    }
+}
+
+void margesort(int start, int end){
+    int mid;
+    if(start < end){
+        mid = (start + end) / 2;
+        margesort(start, mid);
+        margesort(mid + 1, end);
+        marge(start, end);
+    }
+}
+
+int main(){
+    scanf("%d",&n);
+    sorted = (int*)malloc(sizeof(int)*n);
+    for(int i = 0; i < n; i++){
+        scanf("%d", &arr[i]);
+    }
+    margesort(0,n-1); //0부터세기에
+    for(int i = 0; i < n; i++){
+        printf("%d\n", sorted[i]);
+    }
+    free(sorted);
+    return 0;
+}
